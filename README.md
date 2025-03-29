@@ -6,4 +6,11 @@ project uses Node.js and HTML 5 content to demonstrate a web application using t
 ## Structure
 
 ## CI/CD 
-The CI/CD pipelines used in the project are implemented using GitHub actions. 
+The CI/CD pipelines used in the project are implemented using GitHub actions. There are two pipelines 
+defined.  These are: 
+
+1. CI.yml This is the Continuous Integration pipeline and performs a build and test of the code any 
+time a change is pushed on any branch. 
+
+2. CD.yml This is the continuous deployment pipeline and is executed only on a successful merge of a 
+branch to the "main" branch.  All deployments are performed from "main". 
