@@ -3,11 +3,20 @@
 
 name: Node.js CI
 
+#
+# The "On" node defines what events or conditions in the repository cause the workflow to be executed. 
+# In this case, we are executing the workflow on any push to any branch, including developer branches, 
+# as well as any pull request created to the main branch.  Note, this runs the CI pipeline when the 
+# developer CREATES the PR to request merging their code to the main branch, and NOT on the actual 
+# merge. This is to ensure the code builds and passes all tests at the time the PR is created.  When 
+# the PR is merged, the deployment pipeline will be triggered.  If the PR is changed as part of the 
+# reviews, any pushes will also trigger this CI pipeline again. 
+#
 on:
   push:
-    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
+    branches: 
+      - main
 
 jobs:
   build:
