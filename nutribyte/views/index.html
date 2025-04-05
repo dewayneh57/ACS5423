@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <script src="/scripts/main_page.js"></script>
+    <title>NutriByte</title>
+  </head>
+  <body>
+    <div class="banner">
+      <img src="images/NutriByte.png" alt="Logo" />
+    </div>
+
+    <div>
+      <div class="tab-container">
+        <div class="tab-buttons">
+          <button class="tab-link active" data-tab="category">Category</button>
+          <button class="tab-link" data-tab="nutrient">Nutrient</button>
+          <button class="tab-link" data-tab="brand">Brand</button>
+          <button class="tab-link" data-tab="search">Search</button>
+        </div>
+
+        <div id="category" class="tab-content active">
+          <div class="filter">
+            <label for="category">Category:</label>
+            <select id="category" name="category">
+              <option>--select a category--</option>
+            </select>
+          </div>
+          <ul id="categoryContent" name="categoryContent">
+            <li>One</li>
+            <li>Two</li>
+          </ul>
+        </div>
+        <div id="nutrient" class="tab-content">
+          <div class="filter">
+            <label for="nutrient">Nutrient:</label>
+            <select id="nutrient" name="nutrient">
+              <option>--select a nutrient--</option>
+            </select>
+          </div>
+          <ul id="nutrientContent" name="nutrientContent">
+            <li>One</li>
+            <li>Two</li>
+          </ul>
+        </div>
+        <div id="brand" class="tab-content">
+          <div class="filter">
+            <label for="brand">Brand:</label>
+            <select id="brand" name="brand">
+              <option>--select a brand--</option>
+            </select>
+          </div>
+          <ul id="brandContent" name="brandContent">
+            <li>One</li>
+            <li>Two</li>
+          </ul>
+        </div>
+        <div id="search" class="tab-content">
+          <div class="filter">
+            <label for="keyword">Keyword:</label>
+            <input
+              type="text"
+              id="keyword"
+              name="keyword"
+              placeholder="keyword(s)"
+            />
+          </div>
+          <ul id="brandContent" name="brandContent">
+            <li>One</li>
+            <li>Two</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
