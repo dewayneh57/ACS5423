@@ -66,6 +66,9 @@ function loadFoodsByCategory(category) {
       foods.forEach(food => {
         const li = document.createElement('li');
         li.textContent = food.description;
+        li.style.cursor = 'pointer';
+        li.dataset.expanded = 'false';
+        li.addEventListener('click', () => toggleFoodDetails(li, food));
         list.appendChild(li);
       });
     })
@@ -73,3 +76,31 @@ function loadFoodsByCategory(category) {
       console.error('Error loading foods:', err);
     });
 }
+
+function toggleFoodDetails(li, food) {
+  const expanded = li.dataset.expanded === 'true';
+
+  if (expanded) {
+    const detail = li.nextElementSibling;
+    if (detail && detail.classList.contains('food-detail')) {
+      detail.remove();
+    }
+    li.dataset.expanded = 'false';
+    return;
+  }
+
+  // Create the detail element
+  const detail = document.createElement('div');
+  detail.className = 'food-detail';
+  detail.innerHTML = `
+    <strong>Brand:</strong> ${food.brandOwner}<br/>
+    <strong>Ingredients:</strong> ${food.ingredients}<br/>
+    <strong>Serving Size:</strong> ${food.servingSize} ${food.servingSizeUnit}<br/>
+    <strong>Published:</strong> ${new Date(food.publicationDate).toLocaleDateString()}
+  `;
+
+  // Insert after the clicked <li>
+  li.insertAdjacentElement('afterend', detail);
+  li.dataset.expanded = 'true';
+}
+
