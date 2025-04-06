@@ -124,6 +124,8 @@ function loadBrands() {
 
 function loadFoodsByCategory(category) {
   console.log("Loading foods for category:", category);
+  document.body.style.cursor = "wait";
+
   fetch(`/api/foods?category=${encodeURIComponent(category)}`)
     .then((res) => res.json())
     .then((foods) => {
@@ -148,11 +150,17 @@ function loadFoodsByCategory(category) {
     })
     .catch((err) => {
       console.error("Error loading foods:", err);
+    })
+    .finally(() => {
+      // Restore cursor
+      document.body.style.cursor = "default";
     });
 }
 
 function loadFoodsByNutrient(nutrient) {
   console.log("Loading foods for nutrient:", nutrient);
+  document.body.style.cursor = "wait";
+
   fetch(`/api/foods?nutrient=${encodeURIComponent(nutrient)}`)
     .then((res) => res.json())
     .then((foods) => {
@@ -177,11 +185,17 @@ function loadFoodsByNutrient(nutrient) {
     })
     .catch((err) => {
       console.error("Error loading foods:", err);
+    })
+    .finally(() => {
+      // Restore cursor
+      document.body.style.cursor = "default";
     });
 }
 
 function loadFoodsByBrand(brand) {
   console.log("Loading foods for brand:", brand);
+  document.body.style.cursor = "wait";
+
   fetch(`/api/foods?brand=${encodeURIComponent(brand)}`)
     .then((res) => res.json())
     .then((foods) => {
@@ -206,11 +220,17 @@ function loadFoodsByBrand(brand) {
     })
     .catch((err) => {
       console.error("Error loading foods:", err);
+    })
+    .finally(() => {
+      // Restore cursor
+      document.body.style.cursor = "default";
     });
 }
 
 function loadFoodsByKeyword(keyword) {
   console.log("Loading foods for keyword search:", keyword);
+  document.body.style.cursor = "wait";
+
   fetch(`/api/foods?keyword=${encodeURIComponent(keyword)}`)
     .then((res) => res.json())
     .then((foods) => {
@@ -235,6 +255,10 @@ function loadFoodsByKeyword(keyword) {
     })
     .catch((err) => {
       console.error("Error loading foods:", err);
+    })
+    .finally(() => {
+      // Restore cursor
+      document.body.style.cursor = "default";
     });
 }
 
