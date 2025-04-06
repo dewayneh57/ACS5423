@@ -13,12 +13,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Add active class to clicked button and corresponding tab
       button.classList.add("active");
-      const target = document.getElementById(button.getAttribute("data-tab"));
+      const target = document.getElementById(
+        button.getAttribute("data-tab") + "Container"
+      );
       target.classList.add("active");
     });
   });
 
   loadCategories();
+  loadNutrients();
 
   const category = document.getElementById("category");
   category.addEventListener("change", function () {
@@ -27,11 +30,19 @@ document.addEventListener("DOMContentLoaded", function () {
       loadFoodsByCategory(selectedCategory);
     }
   });
+
+  const nutrient = document.getElementById("nutrient");
+  nutrient.addEventListener("change", function () {
+    const selectedNutrient = this.value;
+    if (selectedNutrient) {
+      loadFoodsByNutrient(selectedNutrient);
+    }
+  });
 });
 
 function loadCategories() {
   console.log("getting categories");
-  fetch("/api/categories") // or adjust path if needed
+  fetch("/api/categories")
     .then((res) => res.json())
     .then((categories) => {
       const select = document.getElementById("category");
@@ -48,59 +59,111 @@ function loadCategories() {
     });
 }
 
+function loadNutrients() {
+  console.log("getting nutrients");
+  fetch("/api/nutrients")
+    .then((res) => res.json())
+    .then((nutrients) => {
+      const select = document.getElementById("nutrient");
+
+      nutrients.forEach((nutrient) => {
+        const option = document.createElement("option");
+        option.value = nutrient;
+        option.textContent = nutrient;
+        select.appendChild(option);
+      });
+    })
+    .catch((err) => {
+      console.error("Error loading nutrients:", err);
+    });
+}
+
 function loadFoodsByCategory(category) {
-  console.log('Loading foods for category:', category);
+  console.log("Loading foods for category:", category);
   fetch(`/api/foods?category=${encodeURIComponent(category)}`)
-    .then(res => res.json())
-    .then(foods => {
-      const list = document.getElementById('categoryContent');
-      list.innerHTML = ''; // Clear existing content
+    .then((res) => res.json())
+    .then((foods) => {
+      const list = document.getElementById("categoryContent");
+      list.innerHTML = ""; // Clear existing content
 
       if (foods.length === 0) {
-        const li = document.createElement('li');
-        li.textContent = 'No foods found for this category.';
+        const li = document.createElement("li");
+        li.textContent = "No foods found for this category.";
         list.appendChild(li);
         return;
       }
 
-      foods.forEach(food => {
-        const li = document.createElement('li');
+      foods.forEach((food) => {
+        const li = document.createElement("li");
         li.textContent = food.description;
-        li.style.cursor = 'pointer';
-        li.dataset.expanded = 'false';
-        li.addEventListener('click', () => toggleFoodDetails(li, food));
+        li.style.cursor = "pointer";
+        li.dataset.expanded = "false";
+        li.addEventListener("click", () => toggleFoodDetails(li, food));
         list.appendChild(li);
       });
     })
-    .catch(err => {
-      console.error('Error loading foods:', err);
+    .catch((err) => {
+      console.error("Error loading foods:", err);
     });
 }
 
+function loadFoodsByNutrient(nutrient) {
+  console.log("Loading foods for nutrient:", nutrient);
+  fetch(`/api/foods?nutrient=${encodeURIComponent(nutrient)}`)
+    .then((res) => res.json())
+    .then((foods) => {
+      const list = document.getElementById("nutrientContent");
+      list.innerHTML = ""; // Clear existing content
+
+      if (foods.length === 0) {
+        const li = document.createElement("li");
+        li.textContent = "No foods found for this category.";
+        list.appendChild(li);
+        return;
+      }
+
+      foods.forEach((food) => {
+        const li = document.createElement("li");
+        li.textContent = food.description;
+        li.style.cursor = "pointer";
+        li.dataset.expanded = "false";
+        li.addEventListener("click", () => toggleFoodDetails(li, food));
+        list.appendChild(li);
+      });
+    })
+    .catch((err) => {
+      console.error("Error loading foods:", err);
+    });
+}
+
+
 function toggleFoodDetails(li, food) {
-  const expanded = li.dataset.expanded === 'true';
+  const expanded = li.dataset.expanded === "true";
 
   if (expanded) {
     const detail = li.nextElementSibling;
-    if (detail && detail.classList.contains('food-detail')) {
+    if (detail && detail.classList.contains("food-detail")) {
       detail.remove();
     }
-    li.dataset.expanded = 'false';
+    li.dataset.expanded = "false";
     return;
   }
 
   // Create the detail element
-  const detail = document.createElement('div');
-  detail.className = 'food-detail';
+  const detail = document.createElement("div");
+  detail.className = "food-detail";
   detail.innerHTML = `
     <strong>Brand:</strong> ${food.brandOwner}<br/>
     <strong>Ingredients:</strong> ${food.ingredients}<br/>
-    <strong>Serving Size:</strong> ${food.servingSize} ${food.servingSizeUnit}<br/>
-    <strong>Published:</strong> ${new Date(food.publicationDate).toLocaleDateString()}
+    <strong>Serving Size:</strong> ${food.servingSize} ${
+    food.servingSizeUnit
+  }<br/>
+    <strong>Published:</strong> ${new Date(
+      food.publicationDate
+    ).toLocaleDateString()}
   `;
 
   // Insert after the clicked <li>
-  li.insertAdjacentElement('afterend', detail);
-  li.dataset.expanded = 'true';
+  li.insertAdjacentElement("afterend", detail);
+  li.dataset.expanded = "true";
 }
-

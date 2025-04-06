@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const BrandedFoodSchema = new mongoose.Schema(
   {
-    fdcId: { type: String, required: true },
+    fdcId: { type: Number, required: true },
     description: { type: String, required: true },
     brandOwner: { type: String, required: true },
     marketCountry: { type: String, required: true },

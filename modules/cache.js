@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
 const BrandedFood = require('../models/BrandedFoodSchema'); 
+const FoodNutrient = require('../models/FoodNutrientSchema'); 
 
 const cache = {
-    categories: []
+    categories: [],
+    nutrients: []
 }; 
 
 async function loadCategories() {
@@ -15,7 +17,19 @@ async function loadCategories() {
     }
   }
 
+  async function loadNutrients() {
+    try {
+      const nutrients = await FoodNutrient.distinct('nutrientName'); 
+      cache.nutrients = nutrients.sort();
+      console.log('Nutrients loaded into cache:', nutrients.length);
+    } catch (err) {
+      console.error('Failed to load nutrients:', err);
+    }
+  }
+
+
   module.exports = {
     cache,
-    loadCategories
+    loadCategories,
+    loadNutrients
   };

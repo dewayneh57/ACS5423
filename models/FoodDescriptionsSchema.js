@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const FoodDescriptionsSchema = new mongoose.Schema(
   {
-    fdcId: { type: String, required: true },
+    fdcId: { type: Number, required: true },
     description: { type: String, required: true },
     publicationDate: { type: Date, required: true },
   },
