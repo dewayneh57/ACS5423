@@ -6,21 +6,17 @@ const FoodNutrient = require("../models/FoodNutrientSchema");
 
 const { cache } = require("../modules/cache"); // adjust path as needed
 
-// GET /categories - return distinct branded food categories
-router.get("/api/categories", async (req, res) => {
-  res.json(cache.categories);
-});
-
-// GET /foods?category=... | nutrient=... | brand=... 
+// GET /foods?category=... | nutrient=... | brand=... | keyword=... 
 router.get("/api/foods", async (req, res) => {
   const category = req.query.category;
   const nutrient = req.query.nutrient;
   const brand = req.query.brand; 
+  const keyword = req.query.keyword; 
 
-  if (!category && !nutrient && !brand) {
+  if (!category && !nutrient && !brand && !keyword) {
     return res
       .status(400)
-      .json({ error: "Either Category, Nutrient, or Brand is required" });
+      .json({ error: "Either Category, Nutrient, Brand, or Keyword is required" });
   }
 
   if (category) {
@@ -35,15 +31,12 @@ router.get("/api/foods", async (req, res) => {
     try {
       // Find all nutrient entries for this nutrient
       const nutrients = await FoodNutrient.find({ nutrientName: nutrient });
-      console.log("found " + nutrients.length + " entries for " + nutrient);
 
       // Extract all unique fdcIds
       const fdcIds = nutrients.map((n) => n.fdcId);
-      console.log("FDC ID's: " + fdcIds);
 
       // Now find all BrandedFood entries with those fdcIds
       const foods = await BrandedFood.find({ fdcId: { $in: fdcIds } });
-      console.log("found " + foods.length + " foods for this nutrient");
 
       res.json(foods);
     } catch (err) {
@@ -58,7 +51,29 @@ router.get("/api/foods", async (req, res) => {
       console.error("Error fetching foods by brand:", err);
       res.status(500).json({ error: "Internal server error" });
     }
+  } else { 
+    console.log("Performing keyword search..." + keyword);
+    const searchRegex = new RegExp(keyword, "i"); 
+
+    const foods = await BrandedFood.find({
+      $or: [
+        { description: searchRegex },
+        { brandOwner: searchRegex },
+        { marketCountry: searchRegex },
+        { ingredients: searchRegex },
+        { householdServingFullText: searchRegex },
+        { brandedFoodCategory: searchRegex }
+      ]
+    });
+    console.log("Found " + foods.length + " foods"); 
+
+    res.json(foods);
   }
+});
+
+// GET /categories - return distinct branded food categories
+router.get("/api/categories", async (req, res) => {
+  res.json(cache.categories);
 });
 
 router.get("/api/nutrients", async (req, res) => {

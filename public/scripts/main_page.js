@@ -47,6 +47,22 @@ document.addEventListener("DOMContentLoaded", function () {
       loadFoodsByBrand(selectedBrand);
     }
   });
+
+  const searchButton = document.getElementById("search");
+  const keywordInput = document.getElementById("keyword");
+
+  // Enable/disable button based on input
+  keywordInput.addEventListener("input", () => {
+    searchButton.disabled = keywordInput.value.trim() === "";
+  });
+
+  // Click event stays the same
+  searchButton.addEventListener("click", () => {
+    const keyword = keywordInput.value.trim();
+    if (keyword) {
+      loadFoodsByKeyword(keyword);
+    }
+  });
 });
 
 function loadCategories() {
@@ -87,7 +103,7 @@ function loadNutrients() {
     });
 }
 
-function loadBrands() { 
+function loadBrands() {
   console.log("getting brands");
   fetch("/api/brands")
     .then((res) => res.json())
@@ -170,6 +186,35 @@ function loadFoodsByBrand(brand) {
     .then((res) => res.json())
     .then((foods) => {
       const list = document.getElementById("brandContent");
+      list.innerHTML = ""; // Clear existing content
+
+      if (foods.length === 0) {
+        const li = document.createElement("li");
+        li.textContent = "No foods found for this category.";
+        list.appendChild(li);
+        return;
+      }
+
+      foods.forEach((food) => {
+        const li = document.createElement("li");
+        li.textContent = food.description;
+        li.style.cursor = "pointer";
+        li.dataset.expanded = "false";
+        li.addEventListener("click", () => toggleFoodDetails(li, food));
+        list.appendChild(li);
+      });
+    })
+    .catch((err) => {
+      console.error("Error loading foods:", err);
+    });
+}
+
+function loadFoodsByKeyword(keyword) {
+  console.log("Loading foods for keyword search:", keyword);
+  fetch(`/api/foods?keyword=${encodeURIComponent(keyword)}`)
+    .then((res) => res.json())
+    .then((foods) => {
+      const list = document.getElementById("keywordContent");
       list.innerHTML = ""; // Clear existing content
 
       if (foods.length === 0) {
