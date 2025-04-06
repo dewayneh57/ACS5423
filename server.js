@@ -5,7 +5,7 @@ const nutriByteRoutes = require('./routes/NutriByteRoutes');
 const path = require("path");
 const app = express();
 const port = 3000;
-const { cache, loadCategories, loadNutrients } = require('./modules/cache');
+const { cache, loadCategories, loadNutrients, loadBrands } = require('./modules/cache');
 
 
 // Serve static files (like images) from the 'public' directory
@@ -35,6 +35,7 @@ mongoose.connect(uri, {
 }).catch(err => console.error('MongoDB connection error:', err));
 loadCategories(); 
 loadNutrients();
+loadBrands();
 
 app.use('/', nutriByteRoutes);
 

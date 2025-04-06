@@ -11,15 +11,16 @@ router.get("/api/categories", async (req, res) => {
   res.json(cache.categories);
 });
 
-// GET /foods?category=... | nutrient=...
+// GET /foods?category=... | nutrient=... | brand=... 
 router.get("/api/foods", async (req, res) => {
   const category = req.query.category;
   const nutrient = req.query.nutrient;
+  const brand = req.query.brand; 
 
-  if (!category && !nutrient) {
+  if (!category && !nutrient && !brand) {
     return res
       .status(400)
-      .json({ error: "Either Category or Nutrient is required" });
+      .json({ error: "Either Category, Nutrient, or Brand is required" });
   }
 
   if (category) {
@@ -49,11 +50,23 @@ router.get("/api/foods", async (req, res) => {
       console.error("Error fetching foods by nutrient:", err);
       res.status(500).json({ error: "Internal server error" });
     }
+  } else if(brand) { 
+    try {
+      const foods = await BrandedFood.find({ brandOwner: brand });
+      res.json(foods);
+    } catch (err) {
+      console.error("Error fetching foods by brand:", err);
+      res.status(500).json({ error: "Internal server error" });
+    }
   }
 });
 
 router.get("/api/nutrients", async (req, res) => {
   res.json(cache.nutrients);
+});
+
+router.get("/api/brands", async (req, res) => { 
+  res.json(cache.brands);
 });
 
 module.exports = router;

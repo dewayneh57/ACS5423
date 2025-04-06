@@ -4,7 +4,8 @@ const FoodNutrient = require('../models/FoodNutrientSchema');
 
 const cache = {
     categories: [],
-    nutrients: []
+    nutrients: [],
+    brands: []
 }; 
 
 async function loadCategories() {
@@ -27,9 +28,20 @@ async function loadCategories() {
     }
   }
 
+  async function loadBrands() { 
+    try {
+      const brands = await BrandedFood.distinct('brandOwner');
+      cache.brands = brands.sort();
+      console.log('Brands loaded into cache:', brands.length);
+    } catch (err) {
+      console.error('Failed to load brands:', err);
+    }
+  }
+
 
   module.exports = {
     cache,
     loadCategories,
-    loadNutrients
+    loadNutrients,
+    loadBrands
   };

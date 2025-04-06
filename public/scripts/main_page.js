@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   loadCategories();
   loadNutrients();
+  loadBrands();
 
   const category = document.getElementById("category");
   category.addEventListener("change", function () {
@@ -36,6 +37,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const selectedNutrient = this.value;
     if (selectedNutrient) {
       loadFoodsByNutrient(selectedNutrient);
+    }
+  });
+
+  const brand = document.getElementById("brand");
+  brand.addEventListener("change", function () {
+    const selectedBrand = this.value;
+    if (selectedBrand) {
+      loadFoodsByBrand(selectedBrand);
     }
   });
 });
@@ -75,6 +84,25 @@ function loadNutrients() {
     })
     .catch((err) => {
       console.error("Error loading nutrients:", err);
+    });
+}
+
+function loadBrands() { 
+  console.log("getting brands");
+  fetch("/api/brands")
+    .then((res) => res.json())
+    .then((brands) => {
+      const select = document.getElementById("brand");
+
+      brands.forEach((brand) => {
+        const option = document.createElement("option");
+        option.value = brand;
+        option.textContent = brand;
+        select.appendChild(option);
+      });
+    })
+    .catch((err) => {
+      console.error("Error loading brands:", err);
     });
 }
 
@@ -136,6 +164,34 @@ function loadFoodsByNutrient(nutrient) {
     });
 }
 
+function loadFoodsByBrand(brand) {
+  console.log("Loading foods for brand:", brand);
+  fetch(`/api/foods?brand=${encodeURIComponent(brand)}`)
+    .then((res) => res.json())
+    .then((foods) => {
+      const list = document.getElementById("brandContent");
+      list.innerHTML = ""; // Clear existing content
+
+      if (foods.length === 0) {
+        const li = document.createElement("li");
+        li.textContent = "No foods found for this category.";
+        list.appendChild(li);
+        return;
+      }
+
+      foods.forEach((food) => {
+        const li = document.createElement("li");
+        li.textContent = food.description;
+        li.style.cursor = "pointer";
+        li.dataset.expanded = "false";
+        li.addEventListener("click", () => toggleFoodDetails(li, food));
+        list.appendChild(li);
+      });
+    })
+    .catch((err) => {
+      console.error("Error loading foods:", err);
+    });
+}
 
 function toggleFoodDetails(li, food) {
   const expanded = li.dataset.expanded === "true";
