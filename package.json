@@ -1,7 +1,7 @@
 {
   "name": "nutribyte",
   "version": "1.0.0",
-  "description": "",
+  "description": "ACS5524",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon App.js",
@@ -9,7 +9,7 @@
     "start-dev": "node App.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Dewayne Hafenstein",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
