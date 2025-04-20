@@ -103,11 +103,38 @@ body {
 
 .filter {
   margin-left: 0;
+  flex: 0 0 auto;
+  min-width: 220px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
 }
 
-.filter label {
-  width: 200px;
-  text-align: right;
+.filter-group {
+  border: 2px solid #007acc;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+  background-color: #f8f9fa;
+}
+
+.filter-group legend {
+  font-weight: bold;
+  padding: 0 8px;
+}
+
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.filter-label {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  gap: 5px;
 }
 
 .food-detail {
@@ -117,4 +144,96 @@ body {
   background-color: #f9f9f9;
   border-radius: 6px;
   font-size: 0.9em;
+}
+
+.slider-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-end;
+}
+
+.slider-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 2px auto;
+  font-family: Arial, sans-serif;
+}
+
+.slider-row {
+  display: grid;
+  grid-template-columns: auto 150px 80px 1fr 80px;
+  align-items: center;
+  gap: 5px;
+}
+
+.slider-title {
+  min-width: 50px;
+  text-align: right;
+}
+
+.slider-track {
+  position: relative;
+  flex: 1;
+  height: 30px;
+}
+
+.slider-track input[type=range] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  pointer-events: none; 
+  appearance: none;
+}
+
+/*
+ * enable all events for the "thumbs" of the sliders.
+ */ 
+.slider-track input[type=range]::-webkit-slider-thumb {
+  pointer-events: all;
+}
+
+/*
+ * The minimum range thumb is above the slider track but below the max thumb.
+ */ 
+input[id$="MinRange"]::-webkit-slider-thumb {
+  background: green;
+  pointer-events: all;
+  -webkit-appearance: none;
+  border-radius: 20%;
+  width: 24px;
+  height: 24px;
+  margin-top: -9px;
+}
+
+/*
+ * The max thumb is above everything. 
+ */
+input[id$="MaxRange"]::-webkit-slider-thumb {
+  background: red;
+  pointer-events: all;
+  -webkit-appearance: none;
+  border-radius: 20%;
+  width: 24px;
+  height: 24px;
+  margin-top: -9px;
+}
+
+/*
+ * Because I'm taking full control over the sliders, I need to style the track as well. 
+ */ 
+.slider-track input[type=range]::-webkit-slider-runnable-track {
+  height: 6px;
+  background: blue;
+  border-radius: 3px;
+}
+
+input[type="number"] {
+  width: 60px;
+  padding: 4px;
+  text-align: center;
 }

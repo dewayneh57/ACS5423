@@ -18,52 +18,98 @@
           <button class="tab-link active" data-tab="category">Category</button>
           <button class="tab-link" data-tab="nutrient">Nutrient</button>
           <button class="tab-link" data-tab="brand">Brand</button>
-          <button class="tab-link" data-tab="search">Search</button>
+          <button class="tab-link" data-tab="keyword">Search</button>
         </div>
 
+        <!-- Category tab -->
         <div id="categoryContainer" class="tab-content active">
           <div class="filter">
             <label for="category">Category:</label>
-            <select id="category" name="category">
+            <select id="categorySelect" name="categorySelect">
               <option>--select a category--</option>
             </select>
           </div>
-          <ul id="categoryContent" name="categoryContent">
-          </ul>
+          <ul id="categoryContent" name="categoryContent"></ul>
         </div>
+
+        <!-- Nutrient tab -->
         <div id="nutrientContainer" class="tab-content">
-          <div class="filter">
-            <label for="nutrient">Nutrient:</label>
-            <select id="nutrient" name="nutrient">
-              <option>--select a nutrient--</option>
-            </select>
-          </div>
-          <ul id="nutrientContent" name="nutrientContent">
-          </ul>
+          <fieldset class="filter-group">
+            <legend>Filter Nutrient Search</legend>
+        
+            <!-- Nutrient filter row -->
+            <div class="filter-row">
+              <label class="filter-label">Nutrient:</label>
+              <select id="nutrientSelect" name="nutrientSelect" 
+                title="Chose a nutrient to filter the display, and/or the macro nutrients below.">
+                <option>--select a nutrient--</option>
+              </select>
+            </div>
+        
+            <!-- Carbohydrates slider -->
+            <div class="slider-row">
+              <input type="checkbox" id="useCarb" title="Check to include carbohydrates in the filter criteria."/>
+              <span class="slider-title">Carbohydrates:</span>
+              <input type="number" id="carbMin" value="20" min="0" max="500" placeholder="Min">
+              <div class="slider-track">
+                <input type="range" id="carbMinRange" min="0" max="500" value="20" step="1">
+                <input type="range" id="carbMaxRange" min="0" max="500" value="100" step="1">
+              </div>
+              <input type="number" id="carbMax" value="100" min="0" max="500" placeholder="Max">
+            </div>
+        
+            <!-- Protein slider -->
+            <div class="slider-row">
+              <input type="checkbox" id="useProtein" title="Check to include proteins in the filter criteria."/>
+              <span class="slider-title">Protein:</span>
+              <input type="number" id="proteinMin" value="20" min="0" max="500" placeholder="Min">
+              <div class="slider-track">
+                <input type="range" id="proteinMinRange" min="0" max="500" value="20" step="1">
+                <input type="range" id="proteinMaxRange" min="0" max="500" value="100" step="1">
+              </div>
+              <input type="number" id="proteinMax" value="100" min="0" max="500" placeholder="Max">
+            </div>
+        
+            <!-- Fat slider -->
+            <div class="slider-row">
+              <input type="checkbox" id="useFat" title="Check to include fats in the filter criteria."/>
+              <span class="slider-title">Fat:</span>
+              <input type="number" id="fatMin" value="20" min="0" max="500" placeholder="Min">
+              <div class="slider-track">
+                <input type="range" id="fatMinRange" min="0" max="500" value="20" step="1">
+                <input type="range" id="fatMaxRange" min="0" max="500" value="100" step="1">
+              </div>
+              <input type="number" id="fatMax" value="80" min="0" max="500" placeholder="Max">
+            </div>
+        
+            <!-- Search Button -->
+            <div class="filter-actions">
+              <button id="nutrientSearchBtn" disabled>Search</button>
+            </div>
+          </fieldset>
+        
+          <ul id="nutrientContent" name="nutrientContent"></ul>
         </div>
+              
+        <!-- Brand tab -->
         <div id="brandContainer" class="tab-content">
           <div class="filter">
             <label for="brand">Brand:</label>
-            <select id="brand" name="brand">
+            <select id="brandSelect" name="brandSelect">
               <option>--select a brand--</option>
             </select>
           </div>
-          <ul id="brandContent" name="brandContent">
-          </ul>
+          <ul id="brandContent" name="brandContent"></ul>
         </div>
-        <div id="searchContainer" class="tab-content">
+
+        <!-- Keyword search tab -->
+        <div id="keywordContainer" class="tab-content">
           <div class="filter">
             <label for="keyword">Keyword:</label>
-            <input
-              type="text"
-              id="keyword"
-              name="keyword"
-              placeholder="keyword(s)"
-            />
-            <button id="search" name="search" disabled>Search</button>
+            <input type="text" id="keywordInput" name="keywordInput" placeholder="keyword(s)" />
+            <button id="keywordSearchBtn" name="keywordSearchBtn" disabled>Search</button>
           </div>
-          <ul id="keywordContent" name="keywordContent">
-          </ul>
+          <ul id="keywordContent" name="keywordContent"></ul>
         </div>
       </div>
     </div>
