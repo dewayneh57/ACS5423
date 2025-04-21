@@ -26,7 +26,6 @@ jobs:
 
       - name: Build 
         run: npm run build
-        if: exists('package.json') && contains(runner.os, 'Linux')
 
       - name: Run_Tests
         run: npm test
