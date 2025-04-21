@@ -4,33 +4,29 @@
 name: CI
 
 on:
-  push:        # On a push
+  push:
     branches: 
-      - '**'   # Any branch
-      
-jobs:
+      - '**'
 
-  # Build and test pipeline 
+jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
-    # Execution steps of the pipeline
     steps:
+      - name: Checkout_Code
+        uses: actions/checkout@v4
 
-    # Check out the code from GitHub repository
-    - name: Checkout_Code
-      uses: actions/checkout@v4
+      - name: Setup_Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'node'
 
-    # Set up the Node.js environment 
-    - name: Setup_Node
-      uses: actions/setup-node@v4
-      with:
-        node-version: 'node'
+      - name: Install_Dependencies
+        run: npm install --save-dev mocha chai supertest
 
-    # Install all needed dependencies 
-    - name: Install_Dependencies 
-      run: npm run build
+      - name: Build 
+        run: npm run build
+        if: exists('package.json') && contains(runner.os, 'Linux')
 
-    # Run test cases 
-    - name: Run_Tests
-      run: npm test
+      - name: Run_Tests
+        run: npm test

@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon App.js",
     "start": "node App.js",
-    "start-dev": "node App.js"
+    "start-dev": "node App.js",
+    "test": "mocha"
   },
   "keywords": [],
   "author": "Dewayne Hafenstein",
@@ -17,5 +18,11 @@
     "mongo": "^0.1.0",
     "mongoose": "^8.13.2",
     "server": "^1.0.41"
+  },
+  "devDependencies": {
+    "chai": "^5.2.0",
+    "chai-http": "^4.3.0",
+    "mocha": "^11.1.0",
+    "supertest": "^7.1.0"
   }
 }

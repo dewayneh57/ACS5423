@@ -1,8 +1,7 @@
 const chai = require("chai");
 const expect = chai.expect;
 const request = require("supertest");
-const mongoose = require("mongoose"); 
-const app = require("./app.js");
+const app = require("../app");
 
 describe("API Tests", () => {
   describe("GET /api/options", () => {
@@ -26,7 +25,6 @@ describe("API Tests", () => {
   });
 });
 
-// ✅ Close DB connection after tests to avoid hanging
 after(async () => {
   await mongoose.disconnect();
 });
