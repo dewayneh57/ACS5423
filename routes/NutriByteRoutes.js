@@ -1,3 +1,9 @@
+/*+-----------------------------------------------------------------------------------+
+ *|                                                                                   |
+ *| NutriBytes server-side API implementation                                         |
+ *|                                                                                   |
+ *+-----------------------------------------------------------------------------------+ 
+ */
 const express = require("express");
 const router = express.Router();
 
@@ -6,7 +12,18 @@ const FoodNutrient = require("../models/FoodNutrientSchema");
 const Options = require("../models/OptionsSchema");
 const { cache } = require("../modules/cache"); // adjust path as needed
 
-// GET /api/options
+/**
+ * Retrieve the options settings from the database.  If they do not exist, return 
+ * defaults
+ * 
+ * Method: GET
+ * Path:   /api/options 
+ * Body:   none
+ * Response: 
+ * {"limit": "0",  # zero or greater, 0 = unlimited
+ *  "caseSensitive" : "false",  # True or false 
+ * }
+ */
 router.get("/api/options", async (req, res) => {
   try {
     let options = await Options.findOne({});
@@ -25,7 +42,17 @@ router.get("/api/options", async (req, res) => {
   }
 });
 
-// POST /api/options - Set options for the behavior of the application.
+/**
+ * Save the options settings in the database. 
+ * 
+ * Method: POST
+ * Path:   /api/options 
+ * Body:   
+ * {"limit": "0",  # zero or greater, 0 = unlimited
+ *  "caseSensitive" : "false",  # True or false 
+ * }
+ */
+
 router.post("/api/options", async (req, res) => {
   const { limit, caseSensitive } = req.body;
   console.log(
@@ -48,6 +75,41 @@ router.post("/api/options", async (req, res) => {
   }
 });
 
+/**
+ * Retrieve the foods that are categorized with the supplied category name
+ * 
+ * Method: GET
+ * Query Param(s): category - The name of the category to match. 
+ * Response: 
+ * [
+ *   {
+ *      "_id": "67f1f462ce8575fa49db68d7",  // database ID
+ *      "fdcId": 360732,                    // fdcId of the food
+ *      "description": "COCO LOPEZ, ...",   // description of the food
+ *      "brandOwner": "COCO LOPEZ",         // brand owner
+ *      "marketCountry": "United States",   // country
+ *      "gtinUpc": 6543655593656,           // the UPC id
+ *      "ingredients": "WATER, SUGAR, ...", // comma-separated list of ingredients
+ *      "servingSize": 89,                  // serving size 
+ *      "servingSizeUnit": "g",             // units of meaasure
+ *      "householdServingFullText": "0.33 cup", // generic term of serving size 
+ *      "brandedFoodCategory": "Alcohol",   // category of food 
+ *      "publicationDate": "2019-04-01T00:00:00.000Z", // Date it was published in the catalog
+ *      "nutrients": [                      // Array of nutrients 
+ *          {
+ *              "_id": "67f1f6eece8575fa49ef56d6", // Database ID of the nutrient
+ *              "fdcId": 360732,            // the fdcId of the food
+ *              "nutrientId": 1087,         // the fdc id of the nutrient 
+ *              "nutrientName": "Calcium, Ca", // The name
+ *              "nutrientNumber": 301,      // The fdc catelog number of the nutrient
+ *              "nutrientUnit": "mg",       // measurement units 
+ *              "amount": 0                 // Amount of the nutrient
+ *          },
+ *          ...
+ *       ]
+ *   }, ...
+ * ]
+ */
 // GET /api/foods/categories?category=...
 router.get("/api/foods/categories", async (req, res) => {
   const category = req.query.category;
@@ -93,6 +155,24 @@ router.get("/api/foods/categories", async (req, res) => {
   }
 });
 
+/**
+ * Retrieve the foods and their ingredients based on a match to one or more nutrients, 
+ * and a min/max range of the macro nutrients if specified. 
+ * 
+ * Method: GET
+ * Query Params: 
+ *     nutrient ----- The name of the nutrient to search for. 
+ *     carbMin ------ If specified, the minimum amount of carbohydrates
+ *     carbMax ------ If specified, the maximum amount of carbohydrates
+ *     proteinMin --- If specified, the minimum amount of protein
+ *     proteinMax --- If specified, the maximum amount of protein 
+ *     fatMin ------- If specified, the minimum amount of fat
+ *     fatMax ------- If specified, the maximum amount of fat
+ * 
+ * Response: 
+ *    See GET /api/foods/categories?category=....  Note, the nutrient array will 
+ *    only include the nutrients that were provided in the query.  
+ */
 // GET /api/foods/nutrients?nutrient=... | carbMin/carbMax=... | proteinMin/proteinMax=... | fatMin/fatMax=...
 router.get("/api/foods/nutrients", async (req, res) => {
   console.log(req.originalUrl);
@@ -187,6 +267,14 @@ router.get("/api/foods/nutrients", async (req, res) => {
   }
 });
 
+/**
+ * Get the Foods by brand name. 
+ * Query Parameter(s):
+ *   brand --- The brand name to return foods 
+ * 
+ * Response: 
+ *    See GET /api/foods/categories?category=...
+ */
 // GET /api/foods/brands?brand=...
 router.get("/api/foods/brands", async (req, res) => {
   const brand = req.query.brand;
@@ -228,6 +316,15 @@ router.get("/api/foods/brands", async (req, res) => {
   }
 });
 
+/**
+ * Return foods that match a keyword in their description, brand, nutrients, or ingredients. 
+ * 
+ * Query Paramter(s):
+ *    keyword --- A key word or regular expression. 
+ * 
+ * Response: 
+ *    See GET /api/foods/categories?category=...
+ */
 // GET /api/foods/keywords?keyword=...
 router.get("/api/foods/keywords", async (req, res) => {
   const keyword = req.query.keyword;
