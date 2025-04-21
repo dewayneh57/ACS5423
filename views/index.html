@@ -10,15 +10,39 @@
   <body>
     <div class="banner">
       <img src="images/NutriByte.png" alt="Logo" />
+      <button id="optionsButton" title="Set operational options and settings.">Options</button>
+    </div>
+
+    <div id="optionsDialog" class="dialog">
+      <div class="dialog-content">
+        <span class="dialog-close">&times;</span>
+        <h2>Application Options</h2>
+    
+        <label>
+          Search Limit:
+          <input type="number" id="searchLimit" min="1" max="100" value="50">
+        </label><br/>
+    
+        <label>
+          <input type="checkbox" id="caseSensitive">
+          Case-sensitive search
+        </label><br/>
+    
+        <button id="saveOptions">Save</button>
+      </div>
     </div>
 
     <div>
       <div class="tab-container">
         <div class="tab-buttons">
-          <button class="tab-link active" data-tab="category">Category</button>
-          <button class="tab-link" data-tab="nutrient">Nutrient</button>
-          <button class="tab-link" data-tab="brand">Brand</button>
-          <button class="tab-link" data-tab="keyword">Search</button>
+          <button class="tab-link active" data-tab="category" 
+            title="Search branded foods by categorizations...">Category</button>
+          <button class="tab-link" data-tab="nutrient"
+            title="Search branded foods by specific nutrients and/or macro nutrient ranges...">Nutrient</button>
+          <button class="tab-link" data-tab="brand"
+            title="Search branded foods by brand name...">Brand</button>
+          <button class="tab-link" data-tab="keyword"
+            title="Search branded foods by keyword or regular expression matches...]">Search</button>
         </div>
 
         <!-- Category tab -->
@@ -36,6 +60,7 @@
         <div id="nutrientContainer" class="tab-content">
           <fieldset class="filter-group">
             <legend>Filter Nutrient Search</legend>
+            <label>Select a specific nutrient from the selection list and/or a range of the desired macro nutrients.  Click the check box to include the macro nutrients in the search.</label>
         
             <!-- Nutrient filter row -->
             <div class="filter-row">

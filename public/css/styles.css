@@ -1,4 +1,10 @@
-/*
+/* *******************************************************************************
+ * 
+ * Styleing for the title bar and options
+ * 
+ * ***************************************************************************** */ 
+
+ /*
  * Style for the body of the page 
  */
 body {
@@ -28,6 +34,37 @@ body {
   top: 0;
   height: 100%;
 }
+
+/*
+ * Style for the options button in the banner.
+ */ 
+#optionsButton {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  color: white;
+  font-weight: bold;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 1000; 
+}
+
+/*
+ * Styling for any hovers over the options button.
+ */
+#optionsButton:hover {
+  text-decoration: underline;
+}
+
+/* *******************************************************************************
+ * 
+ * Filters are the controls at the top of all tab panes that allow the user to 
+ * select various values, ranges of values, keywords, etc.  The filters are applied
+ * to any queries performed to create the results shown to the user. 
+ * 
+ * ***************************************************************************** */ 
 
 /*
  * The tab pane (container) below the banner
@@ -85,6 +122,9 @@ body {
   z-index: 2;
 }
 
+/*
+ * The content "pane" under the tab heading. 
+ */ 
 .tab-content {
   display: none;
   padding: 20px;
@@ -93,14 +133,29 @@ body {
   background: #fff;
 }
 
+/*
+ * How the ul lists are styled.
+ */ 
 .tab-content ul {
   border: thin solid gray;
 }
 
+/*
+ * Displays the content pane when the "active" style is present. 
+ */ 
 .tab-content.active {
   display: block;
 }
 
+/* *******************************************************************************
+ * 
+ * Filters are the controls at the top of all tab panes that allow the user to 
+ * select various values, ranges of values, keywords, etc.  The filters are applied
+ * to any queries performed to create the results shown to the user. 
+ * 
+ * ***************************************************************************** */ 
+
+/* The main class for all filters */ 
 .filter {
   margin-left: 0;
   flex: 0 0 auto;
@@ -110,19 +165,24 @@ body {
   justify-content: flex-start;
 }
 
+/* A group of filters such as used on the nutrients tab when there are more than one 
+ * filter 
+ */ 
 .filter-group {
   border: 2px solid #007acc;
   border-radius: 8px;
-  padding: 16px;
-  margin: 16px 0;
+  padding: 10px;
+  margin: 0 0;
   background-color: #f8f9fa;
 }
 
+/* Styles the legend of the filter group */ 
 .filter-group legend {
   font-weight: bold;
   padding: 0 8px;
 }
 
+/* A filter row is a combination of a label and the filter control */ 
 .filter-row {
   display: flex;
   align-items: center;
@@ -130,6 +190,7 @@ body {
   margin-bottom: 10px;
 }
 
+/* Style the label in a filter row */ 
 .filter-label {
   display: flex;
   align-items: center;
@@ -137,30 +198,22 @@ body {
   gap: 5px;
 }
 
-.food-detail {
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin: 5px 20px;
-  background-color: #f9f9f9;
-  border-radius: 6px;
-  font-size: 0.9em;
-}
+/* *******************************************************************************
+ * 
+ * The range selections for the macro nutrients uses an idea I saw used on a web 
+ * site that allowed the user to specify a minimum and maximum value using a slider
+ * with two "thumbs", one being the min and the other the max value.  
+ *
+ * To repeat this effect, I used two slider controls superimposed on top of each
+ * other, with the minimum slider beneath the maximum slider.  Each slider also 
+ * has a text entry field at either end to enter the min and max values textually
+ * if desired.  These styles are used to define how this is all displayed, working
+ * in conjunction with js code to sync the values and ensure min <= max at all times.
+ * 
+ * ***************************************************************************** */ 
 
-.slider-group {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  align-items: flex-end;
-}
-
-.slider-container {
-  width: 100%;
-  max-width: 600px;
-  margin: 2px auto;
-  font-family: Arial, sans-serif;
-}
-
+ /* A slider-row is the collection of any labels, check-boxes, and the min value, 
+ min and max sliders, and the max value. */ 
 .slider-row {
   display: grid;
   grid-template-columns: auto 150px 80px 1fr 80px;
@@ -168,11 +221,13 @@ body {
   gap: 5px;
 }
 
+/* The slider title is the combination of any label and the slider in a single row */ 
 .slider-title {
   min-width: 50px;
   text-align: right;
 }
 
+/* The slider track is the combination of the min and max sliders superimposed. */
 .slider-track {
   position: relative;
   flex: 1;
@@ -188,6 +243,17 @@ body {
   background: transparent;
   pointer-events: none; 
   appearance: none;
+}
+
+/*
+ * Since the range sliders are two slider controls overlaid, we need to make the slider
+ * track of the top slider (the max value) transparent to keep from messing up the 
+ * min thumb. 
+ */ 
+#carbMaxRange::-webkit-slider-runnable-track,
+#proteinMaxRange::-webkit-slider-runnable-track,
+#fatMaxRange::-webkit-slider-runnable-track {
+  background: transparent;
 }
 
 /*
@@ -237,3 +303,83 @@ input[type="number"] {
   padding: 4px;
   text-align: center;
 }
+
+/* *******************************************************************************
+ * 
+ * Styling of the detail pane that is opened when the user clicks on one or more 
+ * foods
+ * 
+ * ***************************************************************************** */ 
+
+ .food-detail {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 5px 20px;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  font-size: 0.9em;
+}
+
+/* *******************************************************************************
+ * 
+ * The range selections for the macro nutrients uses an idea I saw used on a web 
+ * site that allowed the user to specify a minimum and maximum value using a slider
+ * with two "thumbs", one being the min and the other the max value.  
+ *
+ * To repeat this effect, I used two slider controls superimposed on top of each
+ * other, with the minimum slider beneath the maximum slider.  Each slider also 
+ * has a text entry field at either end to enter the min and max values textually
+ * if desired.  These styles are used to define how this is all displayed, working
+ * in conjunction with js code to sync the values and ensure min <= max at all times.
+ * 
+ * ***************************************************************************** */ 
+
+ /* The dialog itself */ 
+ .dialog {
+  display: none;
+  position: fixed;
+  z-index: 100; 
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* The content of the dialog */ 
+.dialog-content {
+  pointer-events: auto;
+  background-color: #bacdef;
+  color: black;
+  margin: 15% auto;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  box-shadow: 0 2px 10px rgba(0,0,0);
+}
+
+.dialog.open {
+  display: block; 
+  pointer-events: auto;
+}
+
+body.dialog-open {
+  pointer-events: none;  
+  user-select: none;
+}
+
+body.dialog-open *:not(.dialog *) {
+  opacity: 0.7;
+}
+
+.dialog-close {
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  font-size: 20px;
+  cursor: pointer;
+}
+

@@ -14,8 +14,16 @@ var nutrientSearchBtn; // The nutrient search button
 
 var brandSelect; // The brand selection list
 
-var keywordInput;
-var keywordSearchBtn; 
+var keywordInput; // The keyword input text field
+var keywordSearchBtn; // The keyword search button 
+
+var dialog;
+var dialogOpenBtn;
+var dialogCloseBtn;
+var dialogSaveBtn;
+
+var searchLimit; 
+var caseSensitive; 
 
 /* ***********************************************************************************************
  *
@@ -23,6 +31,14 @@ var keywordSearchBtn;
  *
  *********************************************************************************************** */
 document.addEventListener("DOMContentLoaded", function () {
+  // Get the options dialog controls 
+  dialog = document.getElementById("optionsDialog");
+  dialogOpenBtn = document.getElementById("optionsButton");
+  dialogCloseBtn = document.querySelector(".dialog-close");
+  dialogSaveBtn = document.getElementById("saveOptions");
+  searchLimit = document.getElementById("searchLimit");
+  caseSensitive = document.getElementById("caseSensitive"); 
+
   // Get the controls for the tab display
   buttons = document.querySelectorAll(".tab-link");
   contents = document.querySelectorAll(".tab-content");
@@ -69,12 +85,65 @@ document.addEventListener("DOMContentLoaded", function () {
   brandSelect.addEventListener("change", getFoodsByBrand);
   keywordInput.addEventListener("input", updateKeywordSearchButtonState);
   keywordSearchBtn.addEventListener("click", getFoodsByKeyword);
+  dialogOpenBtn.addEventListener("click", openOptionsDialog);
+  dialogCloseBtn.addEventListener("click", closeOptionsDialog);
+  dialogSaveBtn.addEventListener("click", saveOptionsDialog); 
 
   // Pre-fetch the contents for the selection lists...
   loadCategories();
   loadNutrients();
   loadBrands();
 });
+
+/* ***********************************************************************************************
+ *
+ * Process options...
+ * 
+ *********************************************************************************************** */
+async function openOptionsDialog() { 
+  console.log("Opening options dialog..."); 
+  try {
+    const res = await fetch("/api/options");
+    if (!res.ok) throw new Error("Failed to load options");
+
+    const options = await res.json();
+
+    // Populate form fields with returned options
+    searchLimit.value = options.limit;
+    caseSensitive.checked = options.caseSensitive;
+  } catch (err) {
+    console.error("Error fetching options:", err);
+    alert("Failed to load options.");
+    searchLimit.value = 50;
+    caseSensitive.checked = false;
+  }
+
+  dialog.classList.add("open");
+  document.body.classList.add("dialog-open");
+}
+
+function closeOptionsDialog() { 
+  dialog.classList.remove("open");
+  document.body.classList.remove("dialog-open");
+}
+
+function saveOptionsDialog() { 
+  var options = {
+    limit: parseInt(searchLimit.value, 10),
+    caseSensitive: caseSensitive.checked,
+  };
+
+  fetch("/api/options", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(options)
+  }).catch(err => {
+    console.error("Error sending options:", err);
+  });
+  closeOptionsDialog();
+}
 
 /* ***********************************************************************************************
  *

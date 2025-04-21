@@ -1,12 +1,13 @@
 require('dotenv').config();
 const express = require("express");
+const app = express();
+app.use(express.json());
 const mongoose = require("mongoose"); 
 const nutriByteRoutes = require('./routes/NutriByteRoutes');
 const path = require("path");
-const app = express();
-const port = 3000;
-const { cache, loadCategories, loadNutrients, loadBrands } = require('./modules/cache');
 
+const port = 3000;
+const { cache, loadCategories, loadNutrients, loadBrands, loadOptions } = require('./modules/cache');
 
 // Serve static files (like images) from the 'public' directory
 app.use(express.static(path.join(__dirname, "public")));
@@ -36,6 +37,7 @@ mongoose.connect(uri, {
 loadCategories(); 
 loadNutrients();
 loadBrands();
+loadOptions();
 
 app.use('/', nutriByteRoutes);
 
