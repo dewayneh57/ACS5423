@@ -1,36 +1,34 @@
-name: Deploy to AWS Elastic Beanstalk
+name: Deploy to Heroku
 
 on:
   push:
     branches:
-      - main  # Only runs on push to main
-      
+      - main  # or "master", or change to only deploy on PR merge if preferred
+
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout source code
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 'node'
+          node-version: '20'  # or your app's Node.js version
 
       - name: Install dependencies
         run: npm install
 
-      - name: Build project
-        run: npm run build
+      - name: Run tests
+        run: npm test  # optional, include only if you have test scripts
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1  
-
-      - name: Deploy to Elastic Beanstalk
+      - name: Deploy to Heroku
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
-          zip -r app.zip . -x "*.*
+          curl https://cli-assets.heroku.com/install.sh | sh
+          heroku auth:token
+          heroku git:remote -a ${{ secrets.HEROKU_APP_NAME }}
+          git push https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git HEAD:refs/heads/main --force
