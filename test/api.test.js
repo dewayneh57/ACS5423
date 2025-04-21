@@ -2,7 +2,7 @@ const chai = require("chai");
 const expect = chai.expect;
 const request = require("supertest");
 const mongoose = require("mongoose");
-const app = require("../app"); // NOTE: lowercase app.js, not App.js (case-sensitive on Linux)
+const app = require("../App");
 
 describe("API Tests", function () {
   this.timeout(5000); 
