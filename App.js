@@ -1,32 +1,61 @@
-const chai = require("chai");
-const expect = chai.expect;
-const request = require("supertest");
+require('dotenv').config();
+const express = require("express");
 const mongoose = require("mongoose"); 
-const app = require("./app.js");
+const path = require("path");
 
-describe("API Tests", () => {
-  describe("GET /api/options", () => {
-    it("should return options with default or stored values", async () => {
-      const res = await request(app).get("/api/options");
+const app = express();
+module.exports = app;
 
-      expect(res.statusCode).to.equal(200);
-      expect(res.body).to.have.property("limit");
-      expect(res.body).to.have.property("caseSensitive");
-    });
-  });
+const nutriByteRoutes = require('./routes/NutriByteRoutes');
+const { 
+  cache, 
+  loadCategories, 
+  loadNutrients, 
+  loadBrands, 
+  loadOptions 
+} = require('./modules/cache');
 
-  describe("POST /api/options", () => {
-    it("should update options successfully", async () => {
-      const res = await request(app)
-        .post("/api/options")
-        .send({ limit: 25, caseSensitive: true });
+app.use(express.json());
+app.use(express.static(path.join(__dirname, "public")));
+app.set("views", path.join(__dirname, "views"));
 
-      expect(res.statusCode).to.equal(204);
-    });
-  });
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "index.html"));
 });
+app.use("/", nutriByteRoutes);
 
-// ✅ Close DB connection after tests to avoid hanging
-after(async () => {
-  await mongoose.disconnect();
-});
+const port = process.env.PORT || 3000;
+const uri = process.env.MONGODB_URI;
+
+async function startServer() { 
+  try {
+    await mongoose.connect(uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    })
+    .then(() => {
+      console.log("Mongoose connected:");
+      //  console.log(mongoose.connection);
+      console.log("Host:", mongoose.connection.host);
+      console.log("Port:", mongoose.connection.port);
+      console.log("Database Name:", mongoose.connection.name);
+    }).catch(err => console.error('MongoDB connection error:', err));
+
+    await Promise.all([
+      loadCategories(), 
+      loadNutrients(),
+      loadBrands(),
+      loadOptions()
+    ]);
+
+    if (require.main === module) {
+      app.listen(port, () => {
+        console.log(`Server running at http://localhost:${port}`);
+      });
+    }
+  } catch (err) {
+    console.error("Error during app initialization:", err);
+  }
+}
+
+startServer(); 

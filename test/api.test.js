@@ -1,9 +1,12 @@
 const chai = require("chai");
 const expect = chai.expect;
 const request = require("supertest");
-const app = require("../app");
+const mongoose = require("mongoose");
+const app = require("../app"); // NOTE: lowercase app.js, not App.js (case-sensitive on Linux)
 
-describe("API Tests", () => {
+describe("API Tests", function () {
+  this.timeout(5000); 
+
   describe("GET /api/options", () => {
     it("should return options with default or stored values", async () => {
       const res = await request(app).get("/api/options");
