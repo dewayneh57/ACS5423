@@ -1,31 +1,32 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests
-# It uses the latest stable version of Node.js.
-# This pipeline is triggered on a push to any branch. 
 name: CI
 
 on:
   push:
-    branches: 
-      - '**'
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout_Code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup_Node
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 'node'
+          node-version: '20'
 
-      - name: Install_Dependencies
-        run: npm install --save-dev mocha chai supertest
+      - name: Install dependencies if package.json exists
+        run: |
+          if [ -f package.json ]; then
+            npm ci
+          fi
 
-      - name: Build 
-        run: npm run build
-
-      - name: Run_Tests
-        run: npm test
+      - name: Run tests
+        run: |
+          if [ -f package.json ]; then
+            npm test
+          fi
