@@ -1,9 +1,9 @@
-name: Deploy to Heroku
+name: CD
 
 on:
   push:
     branches:
-      - main  # or "master", or change to only deploy on PR merge if preferred
+      - main  
 
 jobs:
   build-and-deploy:
@@ -16,13 +16,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'  # or your app's Node.js version
+          node-version: '22'  # or your app's Node.js version
 
       - name: Install dependencies
         run: npm install
 
       - name: Run tests
-        run: npm test  # optional, include only if you have test scripts
+        run: npm test  
 
       - name: Deploy to Heroku
         env:
