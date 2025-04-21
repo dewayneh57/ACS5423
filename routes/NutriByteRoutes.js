@@ -249,7 +249,7 @@ router.get("/api/foods/keywords", async (req, res) => {
       { householdServingFullText: searchRegex },
       { brandedFoodCategory: searchRegex },
     ],
-  });
+  }).limit(cache.options.limit);
 
   // Get the fdc id's for all these foods
   var fdcIds = foods.map((food) => food.fdcId);
