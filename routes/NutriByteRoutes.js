@@ -119,12 +119,13 @@ router.get("/api/foods/categories", async (req, res) => {
       error: "The category name must be supplied as a query parameter.",
     });
   }
+  var limit = cache.options.limit === 0 ? undefined : cache.options.limit; 
 
   try {
     // Get the foods in the category selected
     const foods = await BrandedFood.find({
       brandedFoodCategory: category,
-    }).limit(cache.options.limit);
+    }).limit(limit);
 
     // Get the fdc id's for all these foods
     var fdcIds = foods.map((food) => food.fdcId);
@@ -199,6 +200,7 @@ router.get("/api/foods/nutrients", async (req, res) => {
   try {
     // Build nutrient filters
     const nutrientFilters = [];
+    var limit = cache.options.limit === 0 ? undefined : cache.options.limit; 
 
     if (nutrient) {
       nutrientFilters.push({ nutrientName: nutrient });
@@ -252,7 +254,7 @@ router.get("/api/foods/nutrients", async (req, res) => {
     // Fetch foods and attach their nutrients from the same map
     const foods = await BrandedFood.find({
       fdcId: { $in: matchingFdcIds },
-    }).limit(cache.options.limit);
+    }).limit(limit);
 
     const foodsWithNutrients = foods.map((food) => ({
       ...food.toObject(),
@@ -284,8 +286,11 @@ router.get("/api/foods/brands", async (req, res) => {
       error: "Either Category, Nutrient, Brand, or Keyword is required",
     });
   }
+
+  var limit = cache.options.limit === 0 ? undefined : cache.options.limit; 
+
   try {
-    const foods = await BrandedFood.find({ brandOwner: brand }).limit(cache.options.limit);
+    const foods = await BrandedFood.find({ brandOwner: brand }).limit(limit);
 
     // Get the fdc id's for all these foods
     var fdcIds = foods.map((food) => food.fdcId);
