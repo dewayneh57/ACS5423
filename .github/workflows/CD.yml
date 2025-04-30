@@ -6,10 +6,9 @@ on:
       - main
 
   pull_request:
-    branches:
+    types: [closed]
+    branches: 
       - main
-    types:
-      - closed
 
 jobs:
   build-and-deploy:
